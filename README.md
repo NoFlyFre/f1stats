@@ -1,3 +1,6 @@
+# f1stats
+Simple NextJs app for live stats of F1 races
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
