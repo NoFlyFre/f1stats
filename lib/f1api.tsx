@@ -1,3 +1,5 @@
+// f1api.tsx
+
 export interface Session {
   session_key: number;
   circuit_short_name: string;
@@ -6,13 +8,13 @@ export interface Session {
   session_name: string;
 }
 
-interface Driver {
+export interface Driver {
   driver_number: number;
   full_name: string;
   team_name: string;
 }
 
-interface TyreStint {
+export interface TyreStint {
   compound: string;
   driver_number: number;
   lap_start: number;
@@ -21,7 +23,7 @@ interface TyreStint {
   tyre_age_at_start: number;
 }
 
-interface LapTime {
+export interface LapTime {
   driver_number: number;
   lap_number: number;
   lap_duration: number;
@@ -30,7 +32,7 @@ interface LapTime {
   duration_sector_3: number;
 }
 
-interface PositionData {
+export interface PositionData {
   date: string;
   driver_number: number;
   meeting_key: number;
@@ -107,13 +109,19 @@ export async function getBestLapTimes(sessionKey: number): Promise<LapTime[]> {
   const res = await fetch(`${BASE_URL}/laps?session_key=${sessionKey}`);
   const data: LapTime[] = await res.json();
 
-  // Raggruppa i tempi per pilota e prendi il miglior giro di ciascuno
   const bestLapTimesMap = new Map<number, LapTime>();
 
-  data.forEach((lap) => {
+  data.forEach((lap: LapTime) => {
+    // Ignora i giri con lap_duration nullo o non definito
+    if (lap.lap_duration == null) {
+      return;
+    }
+
     const existingLap = bestLapTimesMap.get(lap.driver_number);
+
     if (
       !existingLap ||
+      existingLap.lap_duration == null ||
       lap.lap_duration < existingLap.lap_duration
     ) {
       bestLapTimesMap.set(lap.driver_number, lap);
@@ -121,4 +129,20 @@ export async function getBestLapTimes(sessionKey: number): Promise<LapTime[]> {
   });
 
   return Array.from(bestLapTimesMap.values());
+}
+
+export async function getLastLapTimes(sessionKey: number): Promise<LapTime[]> {
+  const res = await fetch(`${BASE_URL}/laps?session_key=${sessionKey}`);
+  const data: LapTime[] = await res.json();
+
+  const lastLapTimesMap = new Map<number, LapTime>();
+
+  data.forEach((lap: LapTime) => {
+    const existingLap = lastLapTimesMap.get(lap.driver_number);
+    if (!existingLap || lap.lap_number > existingLap.lap_number) {
+      lastLapTimesMap.set(lap.driver_number, lap);
+    }
+  });
+
+  return Array.from(lastLapTimesMap.values());
 }

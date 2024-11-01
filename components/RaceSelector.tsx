@@ -32,7 +32,7 @@ export function RaceSelector({
             onValueChange={(value) => onSelectSession(Number(value))}
             value={selectedSessionKey ? String(selectedSessionKey) : ""}
         >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[280px]">
                 <SelectValue placeholder="Seleziona una gara" />
             </SelectTrigger>
             <SelectContent>
