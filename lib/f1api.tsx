@@ -146,3 +146,23 @@ export async function getLastLapTimes(sessionKey: number): Promise<LapTime[]> {
 
   return Array.from(lastLapTimesMap.values());
 }
+
+export async function fetchTotalTimeData(sessionKey: number) {
+  try {
+    const response = await fetch(`https://api.openf1.org/v1/laps?session_key=${sessionKey}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+
+    // Trasforma i dati per estrarre le informazioni rilevanti per il grafico
+    return data.map(item => ({
+      month: new Date(item.date_start).toLocaleString('default', { month: 'long' }),
+      desktop: item.lap_duration, // Puoi rinominare o aggiustare le chiavi in base ai dati ricevuti
+      mobile: item.duration_sector_1 + item.duration_sector_2 + item.duration_sector_3,
+    }));
+  } catch (error) {
+    console.error("Error fetching total time data:", error);
+    return [];
+  }
+}

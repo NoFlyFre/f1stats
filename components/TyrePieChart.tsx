@@ -11,6 +11,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
+import { Skeleton } from "./ui/skeleton";
 
 interface TyreStint {
   compound: string;
@@ -78,10 +79,10 @@ export function TyrePieChart({ sessionKey, driverNumber }: TyrePieChartProps) {
     return (
       <Card className="w-full h-[400px]">
         <CardHeader>
-          <CardTitle>Utilizzo Gomme</CardTitle>
+          <CardTitle><Skeleton></Skeleton></CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-full">
-          <div>Caricamento...</div>
+          <Skeleton></Skeleton>
         </CardContent>
       </Card>
     );

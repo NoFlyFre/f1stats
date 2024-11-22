@@ -2,15 +2,26 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { LapTimeChart } from "@/components/LapTimeChart";
 import { TyrePieChart } from "@/components/TyrePieChart";
+import { TotalTimeChart } from "@/components/TotalTimeChart";
 import { Badge } from "@/components/ui/badge"
+import DashboardLayout from "@/components/DashBoardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
+interface PilotDashboardProps {
+  params: Promise<{
+    driver_number: string;
+  }>;
+}
 
-export default function PilotDashboard() {
+export default function PilotDashboard({
+  params,
+}: PilotDashboardProps) {
   const [sessionKey, setSessionKey] = useState<number | null>(null);
-  const [driverNumber, setDriverNumber] = useState<number>(1); // Puoi impostare il driver che preferisci
+  const [driverNumber, setDriverNumber] = useState<number>(parseInt(use(params).driver_number)); // Puoi impostare il driver che preferisci
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -43,7 +54,19 @@ export default function PilotDashboard() {
   if (isLoading) {
     return (
       <div className="min-h-screen p-8">
-        <h1 className="text-2xl font-bold mb-4">Caricamento...</h1>
+        <DashboardLayout>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <Card className="w-full h-[400px]">
+              <CardHeader>
+                <CardTitle><Skeleton></Skeleton></CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center justify-center h-full">
+                <Skeleton></Skeleton>
+              </CardContent>
+            </Card>
+          </div>
+        </DashboardLayout>
       </div>
     );
   }
@@ -57,12 +80,12 @@ export default function PilotDashboard() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+    <DashboardLayout>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <LapTimeChart sessionKey={sessionKey} driverNumber={driverNumber}  />
+      <TotalTimeChart></TotalTimeChart>
+        <LapTimeChart sessionKey={sessionKey} driverNumber={driverNumber} />
         <TyrePieChart sessionKey={sessionKey} driverNumber={driverNumber} />
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

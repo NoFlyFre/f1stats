@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
     getDrivers,
     getDriverPositions,
@@ -21,8 +21,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { SessionContext, IsLiveContext } from "@/components/DashBoardLayout";
-import { Skeleton } from "@/components/ui/skeleton"
-
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from 'next/navigation'; // Import corretto
 
 export function DriverStandingsTable() {
     const sessionKey = useContext(SessionContext);
@@ -34,6 +34,7 @@ export function DriverStandingsTable() {
     const [drivers, setDrivers] = useState<Driver[]>([]);
     const [lapTimes, setLapTimes] = useState<Map<number, LapTime>>(new Map());
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const router = useRouter(); // Utilizza useRouter da 'next/navigation'
 
     if (!sessionKey) {
         return <div>Sessione non disponibile</div>;
@@ -146,7 +147,6 @@ export function DriverStandingsTable() {
         );
     }
 
-
     if (!positions.length) {
         return <div>Nessuna classifica disponibile.</div>;
     }
@@ -160,6 +160,7 @@ export function DriverStandingsTable() {
                     <TableHead>Team</TableHead>
                     <TableHead>{isLive ? "Ultimo Giro" : "Miglior Giro"}</TableHead>
                     {isLive && <TableHead>Variazione</TableHead>}
+                    <TableHead></TableHead> {/* Colonna per l'icona */}
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -184,7 +185,21 @@ export function DriverStandingsTable() {
                         : "N/A";
 
                     return (
-                        <TableRow key={position.driver_number}>
+                        <TableRow
+                            key={position.driver_number}
+                            className="cursor-pointer hover:bg-muted/50"
+                            onClick={() => {
+                                router.push(`/pilot/${position.driver_number}`);
+                            }}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    router.push(`/pilot/${position.driver_number}`);
+                                }
+                            }}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Vai alla dashboard di ${driver?.full_name || "N/A"}`}
+                        >
                             <TableCell>{position.position}</TableCell>
                             <TableCell>{driver ? driver.full_name : "N/A"}</TableCell>
                             <TableCell>{driver ? driver.team_name : "N/A"}</TableCell>
@@ -206,6 +221,12 @@ export function DriverStandingsTable() {
                                     )}
                                 </TableCell>
                             )}
+                            {/* Aggiungi un'icona a destra per indicare la navigabilità */}
+                            <TableCell className="flex justify-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 1.414L10.414 10l3.293 3.293a1 1 0 01-1.414 1.414L8.586 10.707a1 1 0 010-1.414L12.293 5.293z" clipRule="evenodd" />
+                                </svg>
+                            </TableCell>
                         </TableRow>
                     );
                 })}

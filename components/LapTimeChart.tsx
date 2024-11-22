@@ -12,6 +12,7 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 import { Space } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 
 interface LapTime {
   lap_number: number;
@@ -94,10 +95,10 @@ export function LapTimeChart({ sessionKey, driverNumber }: LapTimeChartProps) {
     return (
       <Card className="w-full h-[400px]">
         <CardHeader>
-          <CardTitle>Tempi per Settore</CardTitle>
+          <CardTitle><Skeleton></Skeleton></CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-full">
-          <div>Caricamento...</div>
+          <Skeleton></Skeleton>
         </CardContent>
       </Card>
     );
