@@ -236,7 +236,7 @@ export function DriverStandingsTable() {
 }
 
 // Funzione per formattare il tempo sul giro come in Formula 1
-function formatLapTime(duration: number): string {
+export function formatLapTime(duration: number): string {
     const minutes = Math.floor(duration / 60);
     const seconds = duration % 60;
 
