@@ -48,7 +48,7 @@ export function RaceSelector({
                             {`${session.circuit_short_name} - ${formattedDate}`}
                         </SelectItem>
                     );
-                })}
+                })
             </SelectContent>
         </Select>
     );
