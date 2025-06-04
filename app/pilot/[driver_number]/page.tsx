@@ -29,7 +29,7 @@ export default function PilotDashboard() {
 
         if (data && data.length > 0) {
           data.sort(
-            (a: any, b: any) =>
+            (a: { date_end: string }, b: { date_end: string }) =>
               new Date(b.date_end).getTime() - new Date(a.date_end).getTime()
           );
           setSessionKey(data[0].session_key);

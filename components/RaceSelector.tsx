@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import React from "react";
 import { Session } from "@/lib/f1api";
 import {
     Select,

@@ -36,9 +36,7 @@ export function DriverStandingsTable() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const router = useRouter(); // Utilizza useRouter da 'next/navigation'
 
-    if (!sessionKey) {
-        return <div>Sessione non disponibile</div>;
-    }
+
 
     useEffect(() => {
         let isMounted = true;
@@ -47,9 +45,9 @@ export function DriverStandingsTable() {
             try {
                 setIsLoading(true);
                 const [positionsData, driversData, lapTimesData] = await Promise.all([
-                    getDriverPositions(sessionKey),
-                    getDrivers(sessionKey),
-                    isLive ? getLastLapTimes(sessionKey) : getBestLapTimes(sessionKey),
+                    getDriverPositions(sessionKey!),
+                    getDrivers(sessionKey!),
+                    isLive ? getLastLapTimes(sessionKey!) : getBestLapTimes(sessionKey!),
                 ]);
 
                 if (isMounted) {
@@ -116,7 +114,12 @@ export function DriverStandingsTable() {
                 clearInterval(intervalId);
             }
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionKey, isLive]);
+
+    if (!sessionKey) {
+        return <div>Sessione non disponibile</div>;
+    }
 
     if (isLoading) {
         return (
