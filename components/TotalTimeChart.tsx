@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TrendingUp } from "lucide-react";
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts";
 import {
@@ -17,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { fetchTotalTimeData } from "@/lib/f1api"; // Assicurati che il percorso sia corretto
+import { SessionContext } from "@/components/DashBoardLayout";
 
 export const description = "A line chart with a label";
 
@@ -32,13 +33,17 @@ const chartConfig = {
 };
 
 export function TotalTimeChart() {
-  const [chartData, setChartData] = useState([]);
+  const sessionKey = useContext(SessionContext);
+  const [chartData, setChartData] = useState<
+    { month: string; desktop: number; mobile: number }[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!sessionKey) return;
     async function getData() {
       try {
-        const data = await fetchTotalTimeData();
+        const data = await fetchTotalTimeData(sessionKey!);
         setChartData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,7 +53,7 @@ export function TotalTimeChart() {
     }
 
     getData();
-  }, []);
+  }, [sessionKey]);
 
   return (
     <Card>
@@ -60,7 +65,7 @@ export function TotalTimeChart() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <ChartContainer>
+          <ChartContainer config={chartConfig}>
             <LineChart width={600} height={300} data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
@@ -91,3 +96,4 @@ export function TotalTimeChart() {
     </Card>
   );
 }
+
