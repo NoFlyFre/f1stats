@@ -11,7 +11,6 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { Space } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 
 interface LapTime {
@@ -43,12 +42,21 @@ export function LapTimeChart({ sessionKey, driverNumber }: LapTimeChartProps) {
         if (isMounted) {
           const formattedLapTimes = data
             .filter(
-              (lap: any) =>
+              (lap: {
+                duration_sector_1: number | null
+                duration_sector_2: number | null
+                duration_sector_3: number | null
+              }) =>
                 lap.duration_sector_1 != null &&
                 lap.duration_sector_2 != null &&
                 lap.duration_sector_3 != null
             )
-            .map((lap: any) => ({
+            .map((lap: {
+              lap_number: number
+              duration_sector_1: number
+              duration_sector_2: number
+              duration_sector_3: number
+            }) => ({
               lap_number: lap.lap_number,
               duration_sector_1: Number(lap.duration_sector_1),
               duration_sector_2: Number(lap.duration_sector_2),

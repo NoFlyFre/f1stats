@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { RaceSelector } from "@/components/RaceSelector";
 import { getAvailableRaces, Session } from "@/lib/f1api";
 import { Progress } from "@/components/ui/progress"; // Importa Progress
+import Navbar from "@/components/Navbar";
 
 export const SessionContext = createContext<number | null>(null);
 export const IsLiveContext = createContext<boolean>(false);
@@ -26,7 +27,12 @@ export default function DashboardLayout({
 
 
     useEffect(() => {
-        let timer: NodeJS.Timeout;
+        const timer = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 90) return prev;
+                return prev + Math.floor(Math.random() * 10) + 5;
+            });
+        }, 500);
 
         const fetchSessions = async () => {
             try {
@@ -53,14 +59,6 @@ export default function DashboardLayout({
                 clearInterval(timer); // Pulisci il timer
             }
         };
-
-        // Inizia il timer per incrementare la progress bar
-        timer = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 90) return prev; // Limita l'incremento fino al 90%
-                return prev + Math.floor(Math.random() * 10) + 5; // Incrementa casualmente tra 5 e 15
-            });
-        }, 500);
 
         fetchSessions();
 
@@ -97,6 +95,7 @@ export default function DashboardLayout({
     return (
         <SessionContext.Provider value={selectedSessionKey}>
             <IsLiveContext.Provider value={isLive}>
+                <Navbar />
                 <div className="min-h-screen p-8">
                     <div className="flex items-center space-x-4 mb-5">
                         <Badge

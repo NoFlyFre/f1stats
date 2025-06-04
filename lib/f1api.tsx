@@ -66,7 +66,10 @@ export async function getLatestSession() {
   }
 
   // Ordina le sessioni per 'date_end' in ordine decrescente
-  data.sort((a: any, b: any) => new Date(b.date_end).getTime() - new Date(a.date_end).getTime());
+  data.sort(
+    (a: Session, b: Session) =>
+      new Date(b.date_end).getTime() - new Date(a.date_end).getTime()
+  );
 
   // Restituisci la sessione più recente
   return [data[0]];
@@ -153,10 +156,16 @@ export async function fetchTotalTimeData(sessionKey: number) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const data = await response.json();
+    const data: Array<{
+      date_start: string
+      lap_duration: number
+      duration_sector_1: number
+      duration_sector_2: number
+      duration_sector_3: number
+    }> = await response.json();
 
     // Trasforma i dati per estrarre le informazioni rilevanti per il grafico
-    return data.map(item => ({
+    return data.map((item) => ({
       month: new Date(item.date_start).toLocaleString('default', { month: 'long' }),
       desktop: item.lap_duration, // Puoi rinominare o aggiustare le chiavi in base ai dati ricevuti
       mobile: item.duration_sector_1 + item.duration_sector_2 + item.duration_sector_3,
