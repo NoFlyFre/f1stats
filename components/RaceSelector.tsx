@@ -18,7 +18,7 @@ interface RaceSelectorProps {
     onSelectSession: (sessionKey: number) => void;
 }
 
-export function RaceSelector({
+export default function RaceSelector({
     sessions,
     selectedSessionKey,
     onSelectSession,
@@ -39,16 +39,21 @@ export function RaceSelector({
                 {sessions.map((session) => {
                     const date = new Date(session.date_start);
                     const day = date.getDate().toString().padStart(2, "0");
-                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Mesi da 0 a 11
+                    const month = (date.getMonth() + 1)
+                        .toString()
+                        .padStart(2, "0"); // Mesi da 0 a 11
                     const year = date.getFullYear();
                     const formattedDate = `${day}/${month}/${year}`;
 
                     return (
-                        <SelectItem key={session.session_key} value={String(session.session_key)}>
+                        <SelectItem
+                            key={session.session_key}
+                            value={String(session.session_key)}
+                        >
                             {`${session.circuit_short_name} - ${formattedDate}`}
                         </SelectItem>
                     );
-                })
+                })}
             </SelectContent>
         </Select>
     );
