@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState, createContext } from "react";
 import { Badge } from "@/components/ui/badge";
-import { RaceSelector } from "@/components/RaceSelector";
+import RaceSelector from "@/components/RaceSelector";
 import { getAvailableRaces, Session } from "@/lib/f1api";
 import { Progress } from "@/components/ui/progress"; // Importa Progress
 import Navbar from "@/components/Navbar";
