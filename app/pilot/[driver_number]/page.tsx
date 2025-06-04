@@ -2,26 +2,19 @@
 
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { LapTimeChart } from "@/components/LapTimeChart";
 import { TyrePieChart } from "@/components/TyrePieChart";
 import { TotalTimeChart } from "@/components/TotalTimeChart";
-import { Badge } from "@/components/ui/badge"
 import DashboardLayout from "@/components/DashBoardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface PilotDashboardProps {
-  params: Promise<{
-    driver_number: string;
-  }>;
-}
-
-export default function PilotDashboard({
-  params,
-}: PilotDashboardProps) {
+export default function PilotDashboard() {
+  const params = useParams<{ driver_number: string }>();
   const [sessionKey, setSessionKey] = useState<number | null>(null);
-  const [driverNumber, setDriverNumber] = useState<number>(parseInt(use(params).driver_number)); // Puoi impostare il driver che preferisci
+  const driverNumber = parseInt(params.driver_number);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
