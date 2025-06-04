@@ -1,4 +1,4 @@
-// components/DriverStandingsTable.tsx
+// components/SkeletonTable.tsx
 
 "use client";
 
